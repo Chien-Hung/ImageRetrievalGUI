@@ -10,6 +10,47 @@ This is a lightweight GUI for visualizing the Image Retrieval results, and would
 ![alt tag](./demo/demo3.jpg)
 
 
+## Repository Structure
+
+```
+Repository
+├── demo
+│   ├── demo1.jpg
+│   ├── demo2.jpg
+│   └── demo3.jpg
+├── extract_feats.py
+├── libs
+│   ├── datasets.py
+│   ├── models.py
+│   └── utils.py
+├── LICENSE
+├── main.py
+├── query_images
+│   ├── q_001.jpg
+│   ├── q_002.jpg
+│   ├── q_003.jpg
+│   ├── q_004.jpeg
+│   ├── q_005.jpg
+│   └── q_006.jpg
+├── README.md
+├── cars196_checkpoint.pth.tar (should be added)
+├── cub200_checkpoint.pth.tar (should be added)
+└───Datasets (should be added)
+|    ├── cub200
+|    ├── cars196
+```
+
+## Dataset Structures
+__CUB200-2011/CARS196__
+```
+cub200/cars196
+└───images
+|    └───001.Black_footed_Albatross
+|           │   Black_Footed_Albatross_0001_796111
+|           │   ...
+|    ...
+```
+
 ## Demo
 
 
@@ -22,9 +63,9 @@ cd ImageRetrievalGUI
 
 # Train a model for extracting image feature
 
-For this demo, I trained resnet50 models by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). 
+For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1Gem3-9mzutHbNtBVQS8yIi_DPOG0YV2S/view?usp=sharing), [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1wvP3Engemk9RTwiE6cZJjjjonXLXscEA/view?usp=sharing).
 
-Link the datasets.
+Link to the Deep-Metric-Learning-Baselines datasets or download the cub200 / cars196 dataset in this folder.
 
 ```
 ln -s Deep-Metric-Learning-Baselines/Datasets ./Datasets
