@@ -469,7 +469,7 @@ class vis_tool:
             self.label_img3.config(image=self.photo3)
             self.label_img3._ref_img = self.rank_img
 
-            self.rank_img_event(self.label_img3, pred[1:], band+2, col_num)
+            self.rank_img_event(self.label_img3, pred[offset:], band+2, col_num)
 
         self.window.update_idletasks()
 
@@ -623,9 +623,10 @@ class vis_tool:
     def open_image(self):
         filetypes = (("jpeg files","*.jpg"), ("png files","*.png"), ("all files","*.*"))
         filename = filedialog.askopenfilename(initialdir='/', title="Select file", filetypes=filetypes)
-        self.img_list = [filename.split('/')[-1]]
-        self.data_info.query_root = filename.replace(filename.split('/')[-1], '')
-        self.clear_add_listBox1()
+        if isinstance(filename, str):
+            self.img_list = [filename.split('/')[-1]]
+            self.data_info.query_root = filename.replace(filename.split('/')[-1], '')
+            self.clear_add_listBox1()
 
 
     def change_aspect_ratio(self):
