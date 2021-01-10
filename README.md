@@ -63,7 +63,7 @@ cd ImageRetrievalGUI
 
 # Train a model for extracting image feature
 
-For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1Gem3-9mzutHbNtBVQS8yIi_DPOG0YV2S/view?usp=sharing), [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1wvP3Engemk9RTwiE6cZJjjjonXLXscEA/view?usp=sharing).
+For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1Gem3-9mzutHbNtBVQS8yIi_DPOG0YV2S/view?usp=sharing) / [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1wvP3Engemk9RTwiE6cZJjjjonXLXscEA/view?usp=sharing).
 
 Link to the Deep-Metric-Learning-Baselines datasets or download the cub200 / cars196 dataset in this folder.
 
@@ -76,11 +76,11 @@ ln -s Deep-Metric-Learning-Baselines/Datasets ./Datasets
 This offer the trained checkpoints for demo.
 
 ```
-python extract_feats.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
+python extract_feats.py --dataset cub200 --ckpt cub200_checkpoint.pth.tar
 ```
 
 ```
-python extract_feats.py --dataset cub200 --ckpt cub200_checkpoint.pth.tar
+python extract_feats.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
 ```
 
 # Display the results.
