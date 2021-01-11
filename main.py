@@ -616,7 +616,7 @@ class vis_tool:
     def open_image(self):
         filetypes = (("jpeg files","*.jpg"), ("png files","*.png"), ("all files","*.*"))
         filename = filedialog.askopenfilename(initialdir='/', title="Select file", filetypes=filetypes)
-        if isinstance(filename, str):
+        if isinstance(filename, str) and filename != '':
             self.img_list = [filename.split('/')[-1]]
             self.data_info.query_root = filename.replace(filename.split('/')[-1], '')
             self.clear_add_listBox1()
