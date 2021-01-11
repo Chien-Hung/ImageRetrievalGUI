@@ -1,11 +1,4 @@
 # __author__ = 'ChienHung Chen in Academia Sinica IIS'
-# 移除 tooltiops，直接使用 label 顯示類別 (完成)
-# 開發 ranking map + tooltips (完成)
-# 移除 tooltips ，直接使用 label 顯示類別 (完成)
-# 多執行序開圖 (完成)
-# 計算所有ap值 + 上色 (完成，計算很慢，不推薦使用)
-# feature vectors + aspect ratio change + open_image (完成)
-# recall computation (完成) + recall highlight (計算出的數值偏低，需要再驗證)
 
 import os, sys
 import os.path as osp
