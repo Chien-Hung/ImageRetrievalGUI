@@ -7,7 +7,7 @@ This is a lightweight GUI for visualizing the Image Retrieval results, and would
 
 [![alt tag](./demo/demo1.jpg)](https://www.youtube.com/watch?v=xUfO5MMAR5M)
 [![alt tag](./demo/demo2.jpg)](https://www.youtube.com/watch?v=xUfO5MMAR5M)
-[![alt tag](./demo/demo3.jpg)](https://www.youtube.com/watch?v=xUfO5MMAR5M)
+[![alt tag](./demo/demo3.gif)](https://www.youtube.com/watch?v=xUfO5MMAR5M)
 
 Demo video : https://www.youtube.com/watch?v=xUfO5MMAR5M
 
