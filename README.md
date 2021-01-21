@@ -52,17 +52,17 @@ cub200/cars196
 |    ...
 ```
 
-## Demo
+# Demo
 
 
-# Clone this repository.
+## Clone this repository.
 
 ```
 git clone https://github.com/Chien-Hung/ImageRetrievalGUI.git
 cd ImageRetrievalGUI
 ```
 
-# Train a model for extracting image feature
+## Train a model for extracting image feature
 
 For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1Gem3-9mzutHbNtBVQS8yIi_DPOG0YV2S/view?usp=sharing) / [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1wvP3Engemk9RTwiE6cZJjjjonXLXscEA/view?usp=sharing).
 
@@ -72,7 +72,7 @@ Link to the Deep-Metric-Learning-Baselines datasets or download the cub200 / car
 ln -s Deep-Metric-Learning-Baselines/Datasets ./Datasets
 ```
 
-# Extract image collection features by the trained model.
+## Extract image collection features by the trained model.
 
 This offer the trained checkpoints for demo.
 
@@ -84,7 +84,7 @@ python extract_feats.py --dataset cub200 --ckpt cub200_checkpoint.pth.tar
 python extract_feats.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
 ```
 
-# Display the results.
+## Display the results.
 
 ```
 python main.py --dataset cub200 --ckpt cub200_checkpoint.pth.tar 
@@ -96,7 +96,7 @@ python main.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
 
 ---
 
-## Hotkeys
+# Hotkeys
 
 |     KEY    | ACTION                                    |
 |:----------:|-------------------------------------------|
@@ -106,6 +106,6 @@ python main.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
 
 ---
 
-## Reference  
+# Reference  
 
 https://github.com/Confusezius/Deep-Metric-Learning-Baselines
