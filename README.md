@@ -106,7 +106,7 @@ python main.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
 
 # An example of customize model and customize dataset.
 
-I use pretrained resnet18 model and sample some images from imagenet2012 training data for example.
+I use pretrained resnet18 model and sample [some images from imagenet2012 training data](https://drive.google.com/file/d/11smWj5QzM6IcUIRTP0YYlvAI23bIhEQA/view?usp=sharing) for example.
 
 ## Customize dataset
 
