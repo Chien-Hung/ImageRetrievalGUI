@@ -22,6 +22,7 @@ from tkinter import ttk, filedialog
 from PIL import Image, ImageTk
 from libs.utils import apk, fig2img
 from libs.models import ResNet50 as model
+# from libs.models import ResNet18 as model
 
 means = [0.485, 0.456, 0.406]    # imagenet
 stds = [0.229, 0.224, 0.225]     # imagenet
@@ -32,7 +33,8 @@ parser = argparse.ArgumentParser(description="DetVisGUI")
 
 # dataset information
 parser.add_argument('--dataset', default='cub200', help='cars196 / cub200')
-parser.add_argument('--ckpt', default='cub200_checkpoint.pth.tar', help='model checkpoint path')
+parser.add_argument('--input_size', default=(224, 224), help='input image size')
+parser.add_argument('--ckpt', default='', help='model checkpoint path')
 parser.add_argument('--map', default='no_use', help='compute map and highlight list, no_use / compute / map path')
 parser.add_argument('--k_vals',       nargs='+', default=[1,2,4,8], type=int, help='Recall @ Values.')
 parser.add_argument('--device', default='cuda', help='cpu / cuda')
@@ -159,17 +161,19 @@ class vis_tool:
         self.label_img4 = Label(self.panel, height=300, width=300)                            # select image
         self.label_img5 = Label(self.panel)                            # feature vectors
 
-        self.model = model(embed_dim=128)
+        self.model = model()
 
         if osp.exists(args.ckpt):
             print('Loading checkpoints from {} ...'.format(args.ckpt))
             state_dict = torch.load(args.ckpt)['state_dict']
             self.model.load_state_dict(state_dict)
-            self.model = self.model.to(args.device)
-            self.model.eval()
             print('Done')
-        else:
-            print('No checkpoint !')
+        elif args.ckpt != '':
+            print('Not found checkpoint in {}!'.format(args.ckpt))
+            sys.exit()
+
+        self.model = self.model.to(args.device)
+        self.model.eval()
 
         # ---------------------------------------------
         self.box_num = 20
@@ -194,7 +198,7 @@ class vis_tool:
         self.img_name = ''
         self.keep_aspect_ratio = False
         self.img_list = self.data_info.img_list
-        self.transform = transforms.Compose([transforms.Resize(size=(224, 224)),
+        self.transform = transforms.Compose([transforms.Resize(size=args.input_size),
                                              transforms.ToTensor(), 
                                              transforms.Normalize(means, stds)])
 
@@ -370,7 +374,7 @@ class vis_tool:
             ans_score = np.asarray(ans_score)[idx]
             self.ans, self.ans_score = ans, ans_score
             
-            ans_idx = [int(np.where(np.asarray(self.data_info.val_img_list) == a)[0]) for a in ans]
+            ans_idx = [int(np.where(np.asarray(self.data_info.val_img_list) == a)[0]) for a in ans[:self.box_num]]
             
             # open images by multithreading
             img_dict = dict()        
@@ -424,19 +428,22 @@ class vis_tool:
         if self.frame1.index(self.frame1.select()) == 2:
             band = 5
             bar_len = 600
+            max_row_num = 68
             doc_len = len(self.data_info.val_img_list)
-            col_num = int(bar_len / band)                  # 550 / 5 = 110
-            row_num = int(np.ceil(doc_len / col_num))
+            col_num = int(bar_len / band)                                 # 600 / 5 = 120
+            row_num = min(int(np.ceil(doc_len / col_num)), max_row_num)  
             img_height = row_num * band + (row_num+1) * 2
             img_width = bar_len + (col_num+1) * 2
             
             self.rank_img = np.ones((img_height, img_width, 3)) * [253, 150, 150]
             self.rank_img = self.rank_img.astype(np.uint8)
 
-            # tail region
             bg_color = [200, 200, 200]
-            last_col_idx = (doc_len % col_num) - offset
-            self.rank_img[img_height-band-2:img_height, band*last_col_idx+last_col_idx*2:] = bg_color
+
+            if row_num == int(np.ceil(doc_len / col_num)):
+                # tail region
+                last_col_idx = (doc_len % col_num) - offset
+                self.rank_img[img_height-band-2:img_height, band*last_col_idx+last_col_idx*2:] = bg_color
 
             # row grid
             for i in range(0, img_height, band+2):
@@ -512,6 +519,9 @@ class vis_tool:
 
 
         def fix_image(event):
+            if widget.block_num >= len(img_list) or event.x >= stride * col_num:
+                return
+
             widget.fix_image = not widget.fix_image
             if widget.fix_image == True:
                 self.plot_feats(widget.block_num+1)  # +1 -> offset
@@ -569,8 +579,8 @@ class vis_tool:
 
 
     def on_ans_change(self, event):
-        ans_idx = [int(np.where(np.asarray(self.data_info.val_img_list) == a)[0]) for a in self.ans[self.cur_ans_idx:]]
-            
+        ans_idx = [int(np.where(np.asarray(self.data_info.val_img_list) == a)[0]) for a in self.ans[self.cur_ans_idx:(self.cur_ans_idx+self.box_num)]]
+        
         # open images by multithreading
         img_dict = dict()        
         self.data_info.get_img_by_names_mt(ans_idx, img_dict)

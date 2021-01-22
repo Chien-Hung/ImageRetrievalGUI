@@ -7,12 +7,11 @@ from torch.utils.data import Dataset, DataLoader
 
 class Cars196Dataset_all(Dataset):
     def __init__(self, root_dir, transform):
+        self.transform = transform
         self.img_list = []
         for folder in os.listdir(root_dir):
-
             for img_name in os.listdir(osp.join(root_dir, folder)):
                 self.img_list.append(osp.join(root_dir, folder, img_name))
-        self.transform = transform
 
     def __len__(self):
         return len(self.img_list)
@@ -48,14 +47,14 @@ class Cars196Dataset(Dataset):
 
         return self.img_list[idx], img
 
+
 class Cub200Dataset_all(Dataset):
     def __init__(self, root_dir, transform):
+        self.transform = transform
         self.img_list = []
         for folder in os.listdir(root_dir):
-
             for img_name in os.listdir(osp.join(root_dir, folder)):
                 self.img_list.append(osp.join(root_dir, folder, img_name))
-        self.transform = transform
 
     def __len__(self):
         return len(self.img_list)
@@ -91,3 +90,20 @@ class Cub200Dataset(Dataset):
 
         return self.img_list[idx], img
 
+
+class Imagenet2012Dataset(Dataset):
+    def __init__(self, root_dir, transform):
+        self.transform = transform
+        self.img_list = []
+        for folder in os.listdir(root_dir):
+            for img_name in os.listdir(osp.join(root_dir, folder)):
+                self.img_list.append(osp.join(root_dir, folder, img_name))
+
+    def __len__(self):
+        return len(self.img_list)
+
+    def __getitem__(self, idx):
+        img = Image.open(self.img_list[idx]).convert('RGB')
+        img = self.transform(img)
+
+        return self.img_list[idx], img

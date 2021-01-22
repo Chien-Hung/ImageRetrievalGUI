@@ -1,5 +1,12 @@
 # ImageRetrievalGUI
 
+---
+
+## UPDATE
+
+2021/01/22 : Support customize model and customize dataset.
+
+---
 
 ## Introuction
 
@@ -52,6 +59,8 @@ cub200/cars196
 |    ...
 ```
 
+---
+
 # Demo
 
 
@@ -92,6 +101,106 @@ python main.py --dataset cub200 --ckpt cub200_checkpoint.pth.tar
 
 ```
 python main.py --dataset cars196 --ckpt cars196_checkpoint.pth.tar
+```
+---
+
+# An example of customize model and customize dataset.
+
+I use pretrained resnet18 model and sample some images from imagenet2012 training data for example.
+
+## Customize dataset
+
+Place your dataset images in `Datasets` with following structure:
+
+### Dataset Structure
+__imagenet2012__
+```
+imagenet2012
+└───images
+|    └───n01440764
+|           ├── n01440764_18.JPEG
+|           ├── ...
+|    ...
+```
+
+Create your dataset in `libs/dataset.py`:
+
+```python
+class Imagenet2012Dataset(Dataset):
+    def __init__(self, root_dir, transform):
+        self.img_list = []
+        for folder in os.listdir(root_dir):
+
+            for img_name in os.listdir(osp.join(root_dir, folder)):
+                self.img_list.append(osp.join(root_dir, folder, img_name))
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.img_list)
+
+    def __getitem__(self, idx):
+        img = Image.open(self.img_list[idx]).convert('RGB')
+        img = self.transform(img)
+
+        return self.img_list[idx], img
+```
+
+Add your dataset in `extract_feats.py`:
+
+```python
+...
+    elif args.dataset == 'imagenet2012':
+        root_dir = 'Datasets/imagenet2012/images'
+        dataset = Imagenet2012Dataset(root_dir, transform)
+...
+```
+
+## Customize model
+
+Create your model in `libs/models.py`:
+
+```python
+import torchvision.models as models
+...
+
+class ResNet18(nn.Module):
+    def __init__(self):
+        super(ResNet18, self).__init__()
+        
+        self.model = models.resnet18(pretrained=True)
+        self.layer_blocks = nn.ModuleList([self.model.layer1, self.model.layer2, self.model.layer3, self.model.layer4])
+
+    def forward(self, x):
+        x = self.model.maxpool(self.model.relu(self.model.bn1(self.model.conv1(x))))
+
+        for layerblock in self.layer_blocks:
+            x = layerblock(x)
+
+        x = self.model.avgpool(x)
+        x = x.view(x.size(0), -1)
+        
+        return torch.nn.functional.normalize(x, dim=-1)
+```
+
+Change the default model (ResNet50) to your model (ResNet18) in `extract_feats.py` and `main.py`:
+
+```python
+...
+# from libs.models import ResNet50 as model
+from libs.models import ResNet18 as model
+...
+```
+
+## Extract image collection features by the trained model.
+
+```
+python extract_feats.py --dataset imagenet2012
+```
+
+## Display the results.
+
+```
+python main.py --dataset imagenet2012
 ```
 
 ---
