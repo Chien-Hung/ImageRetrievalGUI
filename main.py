@@ -66,6 +66,7 @@ class dataset:
         val_img_list = np.load(osp.join('features', 'names_{}.npy'.format(args.dataset)))
         
         for x in val_img_list:
+            x = str(Path(x))
             splits = x.split(splitter)
             self.val_img_list.append(splits[3] + splitter + splits[4])
         
