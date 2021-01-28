@@ -24,8 +24,15 @@ from libs.utils import apk, fig2img
 from libs.models import ResNet50 as model
 # from libs.models import ResNet18 as model
 
+matplotlib.use("Agg")
+
 means = [0.485, 0.456, 0.406]    # imagenet
 stds = [0.229, 0.224, 0.225]     # imagenet
+
+if platform.system() == 'Windows':
+    splitter = '\\'
+elif platform.system() == 'Linux':
+    splitter = '/'
 
 # ==========================================================
 
@@ -47,17 +54,20 @@ args = parser.parse_args()
 class dataset:
     def __init__(self):
         self.dataset = args.dataset
-        self.img_root = Path('Datasets/{}/images'.format(args.dataset))
+        # self.img_root = Path('Datasets/{}/images'.format(args.dataset))
+        self.img_root = Path(osp.join('Datasets', args.dataset, 'images'))
 
-        self.features = np.load('features/feats_{}.npy'.format(args.dataset))
+        # self.features = np.load('features/feats_{}.npy'.format(args.dataset))
+        self.features = np.load(osp.join('features', 'feats_{}.npy'.format(args.dataset)))
         self.features = torch.Tensor(self.features).to(args.device)
 
         self.val_img_list = []
-        val_img_list = np.load('features/names_{}.npy'.format(args.dataset))
+        # val_img_list = np.load('features/names_{}.npy'.format(args.dataset))
+        val_img_list = np.load(osp.join('features', 'names_{}.npy'.format(args.dataset)))
         
         for x in val_img_list:
-            splits = x.split('/')
-            self.val_img_list.append(splits[3] + '/' + splits[4])
+            splits = x.split(splitter)
+            self.val_img_list.append(splits[3] + splitter + splits[4])
         
         # get query image
         self.query_img_list = []
@@ -274,7 +284,7 @@ class vis_tool:
 
                 # find answer names
                 for img_name in self.data_info.val_img_list:
-                    if name.split('/')[0] in img_name:
+                    if name.split(splitter)[0] in img_name:
                         ans.append(img_name)
     
                 # compute similarity
@@ -337,7 +347,7 @@ class vis_tool:
         if not self.data_info.is_query(name):
             for idx in range(len(self.data_info.features)):
                 img_name = self.data_info.val_img_list[idx]
-                if name.split('/')[0] in img_name:
+                if name.split(splitter)[0] in img_name:
                     ans.append(img_name)
                     ans_score.append(simmat[idx])
 
@@ -359,7 +369,7 @@ class vis_tool:
                     self.frame1.tab(1, state="normal")
 
                 self.label_list[i]['text'] = '{:2} ({:5.4})'.format(i+1, top_score[i])
-                self.label_cls_list[i]['text'] = '{}'.format(self.data_info.val_img_list[top_rank_idx[i]].split('/')[0])
+                self.label_cls_list[i]['text'] = '{}'.format(self.data_info.val_img_list[top_rank_idx[i]].split(splitter)[0])
 
                 # img = self.data_info.get_img_by_name(self.data_info.val_img_list[top_rank_idx[i]])
                 img = img_dict[top_rank_idx[i]]
@@ -499,7 +509,7 @@ class vis_tool:
             if widget.last_num != widget.block_num:
                 widget.last_num = widget.block_num
                 self.title_label_ranking2['bg'] = '#fdfd96'
-                cls, name = img_list[widget.block_num].split('/')
+                cls, name = img_list[widget.block_num].split(splitter)
                 self.title_label_ranking2['text'] = 'Rank: {} | Similarity Score: {:6.4} \n Class: {}  Name: {}'.format(
                     widget.block_num + 1, self.simmat[self.simmat_rank[widget.block_num+1]], cls, name)
 
@@ -627,8 +637,8 @@ class vis_tool:
         filetypes = (("jpeg files","*.jpg"), ("png files","*.png"), ("all files","*.*"))
         filename = filedialog.askopenfilename(initialdir='/', title="Select file", filetypes=filetypes)
         if isinstance(filename, str) and filename != '':
-            self.img_list = [filename.split('/')[-1]]
-            self.data_info.query_root = filename.replace(filename.split('/')[-1], '')
+            self.img_list = [filename.split(splitter)[-1]]
+            self.data_info.query_root = filename.replace(filename.split(splitter)[-1], '')
             self.clear_add_listBox1()
 
 
