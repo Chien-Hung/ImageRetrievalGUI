@@ -73,7 +73,7 @@ cd ImageRetrievalGUI
 
 ## Train a model for extracting image feature
 
-For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1Gem3-9mzutHbNtBVQS8yIi_DPOG0YV2S/view?usp=sharing) / [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1wvP3Engemk9RTwiE6cZJjjjonXLXscEA/view?usp=sharing).
+For this demo, you should train a resnet50 models for cub200 / cars196 dataset by [Deep-Metric-Learning-Baselines](https://github.com/Confusezius/Deep-Metric-Learning-Baselines). Or you can download the trained checkpoints [cub200_checkpoint.pth.tar](https://drive.google.com/file/d/1UqmQT2im4ytakk9WZTDuxmb43eosHMga/view?usp=share_link) / [cars196_checkpoint.pth.tar](https://drive.google.com/file/d/1GM3sj2LN970VT1EiCuvtUruosOnPhKdU/view?usp=share_link).
 
 Link to the Deep-Metric-Learning-Baselines datasets or download the cub200 / cars196 dataset in this folder.
 
